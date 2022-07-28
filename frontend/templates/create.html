@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Lind | Create new Lind</title>
+	<link rel="stylesheet" href="/static/css/general.css">
+	<link rel="stylesheet" href="/static/css/create.css">
+	<script src="/static/js/create.js" defer></script>
+</head>
+<body {% if error == True %}onload="toggleAdvanced();"{% endif %}>
+	<main>
+		<div class="title-container">
+			<h1 class="title">Create a Lind</h1>
+			<div role="doc-subtitle" class="sub-title">The only thing shorter than the setup process is the resulting link</div>
+		</div>
+		<form method="post" class="create-form" id="create-form">
+			<div class="basic-setting expanded">
+				<label for="url-input">URL</label>
+				<input type="url" name="url" id="url-input" required>
+			</div>
+			<h2 class="advanced-setting hidden">Restrictions</h2>
+			<div class="advanced-setting hidden">
+				<label for="exp-input">
+					Expiration Time
+					<div class="exp-error" {% if error != True %}style="display: none;"{% endif %}>*Expiration time needs to be in the future</div>
+				</label>
+				<input type="datetime-local" name="expiration_time" id="exp-input">
+			</div>
+			<div class="advanced-setting hidden">
+				<label for="lim-input">Usage Limiter</label>
+				<input type="number" name="limit_usage" id="lim-input" min="1">
+			</div>
+			<div class="advanced-setting hidden">
+				<label for="access-input">Access Password</label>
+				<input type="password" name="access_password" id="access-input">
+			</div>
+			<h2 class="advanced-setting hidden">Manage</h2>
+			<div class="advanced-setting hidden">
+				<label for="admin-input">Admin Password</label>
+				<input type="password" name="admin_password" id="admin-input">
+			</div>
+		</form>
+		<div class="create-buttons">
+			<a href="/">Cancel</a>
+			<button id="show-advanced">Advanced Settings</button>
+			<button type="submit" form="create-form">Create</button>
+		</div>
+	</main>
+</body>
+</html>

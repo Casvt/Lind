@@ -1,0 +1,57 @@
+body {
+	background-image: linear-gradient(135deg, var(--background-gradient));
+}
+
+main {
+	padding: 3rem;
+}
+
+.title {
+	text-align: center;
+	font-size: 5rem;
+
+	border-radius: 4px;
+}
+
+.sub-title {
+	text-align: center;
+	font-size: 2rem;
+}
+
+.link-box {
+	font-size: 3rem;
+	background-image: linear-gradient(315deg, var(--background-gradient-darkened));
+	color: var(--light-color);
+	padding: 2rem;
+	border-radius: 7px;
+}
+
+.create-button {
+	background-color: var(--light-color);
+	color: var(--dark-color);
+
+	padding: 1rem 2rem;
+	border-radius: 2px;
+
+	text-decoration: none;
+	font-size: 2rem;
+
+	transition: color 300ms, background-color 300ms, outline 300ms;
+}
+
+.create-button:hover {
+	background-color: var(--dark-color);
+	color: var(--light-color);
+	outline: 1px solid var(--light-color);
+}
+
+@media (max-width: 768px) {
+	.create-button {
+		margin-bottom: 4rem;
+	}
+	.title {
+		background-color: var(--background-color);
+		background-image: linear-gradient(315deg, var(--background-gradient));
+		margin-bottom: 1rem;
+	}
+}
