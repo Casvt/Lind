@@ -3,7 +3,7 @@
 
 from frontend.ui import ui
 from frontend.api import api
-from backend.backend import startup, database_maintenance
+from backend.backend import startup, database_maintenance, close_db
 
 from sys import version_info
 from flask import Flask, render_template, request
@@ -29,7 +29,6 @@ def Lind():
 		static_folder=_folder_path('frontend','static'),
 		static_url_path='/static'
 	)
-	app.config['SECRET_KEY'] = 'thisisaverysecretkey'
 	app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 	#add error handlers
@@ -56,6 +55,7 @@ def Lind():
 	app.register_blueprint(api, url_prefix="/api")
 
 	#setup database
+	app.teardown_appcontext(close_db)
 	startup()
 
 	#create waitress server	and run

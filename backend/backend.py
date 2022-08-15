@@ -2,6 +2,7 @@
 
 from backend.custom_exceptions import *
 
+from flask import g
 from random import choice
 from hashlib import pbkdf2_hmac
 from os import urandom
@@ -14,6 +15,21 @@ LIND_DB_FILE = 'Lind.db' 	# the name (and location) of the database file
 LIND_ID_RANGE = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' #the characters that the lind id can consist of
 
 LIND_TABLE_KEYS = ['lind','url','expiration_time','limit_usage','access_password','admin_password'] #don't touch
+
+def get_db():
+	if not (hasattr(g, 'db') and hasattr(g, 'cursor')):
+		g.db = db_connect(LIND_DB_FILE, timeout=20.0)
+		g.cursor = g.db.cursor()
+	return g.cursor
+
+def close_db(e=None) -> None:
+	if hasattr(g, 'db') and hasattr(g, 'cursor'):
+		g.cursor.close()
+		delattr(g, 'cursor')
+		g.db.commit()
+		g.db.close()
+		delattr(g, 'db')
+	return
 
 def startup() -> None:
 	"""Setup application when starting up
@@ -40,7 +56,9 @@ def startup() -> None:
 		);
 	"""
 	cursor.executescript(table_creation)
+	cursor.close()
 	db.commit()
+	db.close()
 	return None
 
 def database_maintenance(full: bool=True) -> None:
@@ -76,8 +94,7 @@ def rate_limiter(ip: str) -> tuple:
 	Returns:
 		tuple: [0] is wether or not the request is approved (if the client has reached it's rate limit or not), [1] is the timeout in case the client has reached the limit
 	"""
-	db = db_connect(LIND_DB_FILE)
-	cursor = db.cursor()
+	cursor = get_db()
 	
 	cursor.execute("SELECT * FROM rate_limiter WHERE ip = ?", (ip,))
 	result = cursor.fetchone()
@@ -100,7 +117,6 @@ def rate_limiter(ip: str) -> tuple:
 			cursor.execute("UPDATE rate_limiter SET visit_count = ?, expiration_time = ? WHERE ip = ?", (1, time() + 60, ip))
 			decision = 'APPROVED', -1
 
-	db.commit()
 	return decision
 
 def register_url(
@@ -129,8 +145,7 @@ def register_url(
 	If admin_password is given, the user can manage the lind by going to {lind_url}/manage and entering the password.
 	There is no way to edit or recover the admin_password in the case of losing it.
 	"""
-	db = db_connect(LIND_DB_FILE)
-	cursor = db.cursor()
+	cursor = get_db()
 
 	#get current lind id length
 	cursor.execute("SELECT LENGTH(lind) FROM links ORDER BY lind DESC LIMIT 1;")
@@ -197,7 +212,6 @@ def register_url(
 			continue
 		break
 
-	db.commit()
 	return lind_id
 
 def get_url(
@@ -224,8 +238,7 @@ def get_url(
 		str (access): url
 		dict (manage): lind info
 	"""
-	db = db_connect(LIND_DB_FILE)
-	cursor = db.cursor()
+	cursor = get_db()
 
 	if not intention in ('access','manage'):
 		return f'Invalid Intention: {intention}'
@@ -240,7 +253,6 @@ def get_url(
 	if (result[2] != None and int(result[2]) < time()) or (result[3] != None and int(result[3]) == 0):
 		#entry has expired
 		cursor.execute("DELETE FROM links WHERE lind = ?", (lind_id,))
-		db.commit()
 		raise LindIdNotFound
 
 	if intention == 'access':
@@ -255,7 +267,6 @@ def get_url(
 
 		if result[3] != None:
 			cursor.execute("UPDATE links SET limit_usage = ? WHERE lind = ?", (int(result[3]) - 1,lind_id))
-			db.commit()
 
 		return result[1]
 	
@@ -298,8 +309,7 @@ def edit_url(
 	Returns:
 		dict: lind info
 	"""
-	db = db_connect(LIND_DB_FILE)
-	cursor = db.cursor()
+	cursor = get_db()
 
 	#fetch entry from database based on lind id
 	cursor.execute("SELECT * FROM links WHERE lind = ?", (lind_id,))
@@ -311,7 +321,6 @@ def edit_url(
 	if result[2] != None and int(result[2]) < time():
 		#entry has expired
 		cursor.execute("DELETE FROM links WHERE lind = ?", (lind_id,))
-		db.commit()
 		raise LindIdNotFound
 
 	insert_keys = []
@@ -358,7 +367,6 @@ def edit_url(
 
 	if insert_keys:
 		cursor.execute(f"UPDATE links SET {','.join(insert_keys)} WHERE lind = ?;", insert_values + [lind_id])
-		db.commit()
 	cursor.execute(f"SELECT * FROM links WHERE lind = ?;", (lind_id,))
 	result = cursor.fetchone()
 	return dict(zip(LIND_TABLE_KEYS[:4], result[:4]))
