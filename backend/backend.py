@@ -6,8 +6,7 @@ from random import choice
 from hashlib import pbkdf2_hmac
 from os import urandom
 from time import time
-from sqlite3 import connect as db_connect
-from sqlite3 import IntegrityError
+from sqlite3 import connect as db_connect, IntegrityError
 
 LIND_RATE_LIMIT = 60 		# x creations per minute alowed per ip address
 LIND_ID_MIN_LENGTH = 5 		# the minimal length of the lind id; adviced to leave at 5
@@ -135,10 +134,10 @@ def register_url(
 
 	#get current lind id length
 	cursor.execute("SELECT LENGTH(lind) FROM links ORDER BY lind DESC LIMIT 1;")
-	lind_id_length = [cursor.fetchone() or LIND_ID_MIN_LENGTH][0]
+	lind_id_length = (cursor.fetchone() or LIND_ID_MIN_LENGTH)[0]
 
 	#check if every possibility with this length hasn't been used yet
-	cursor.execute("SELECT COUNT(*) FROM links WHERE LENGTH(lind) = ?;", (lind_id_length,))
+	cursor.execute("SELECT COUNT(*) FROM links WHERE LENGTH(lind) = ?;", (str(lind_id_length),))
 	if len(LIND_ID_RANGE) ** lind_id_length == cursor.fetchone()[0]:
 		lind_id_length += 1
 

@@ -12,6 +12,7 @@ from os.path import join, dirname
 
 HOST = '0.0.0.0'
 PORT = '8080'
+THREADS = 100
 
 def _folder_path(*folders):
 	return join(dirname(__file__), *folders)
@@ -58,7 +59,7 @@ def Lind():
 	startup()
 
 	#create waitress server	and run
-	server = create_server(app, host=HOST, port=PORT, threads=100)
+	server = create_server(app, host=HOST, port=PORT, threads=THREADS)
 	print(f'Lind running on http://{HOST}:{PORT}/')
 	server.run()
 	
