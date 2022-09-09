@@ -14,7 +14,9 @@ LIND_ID_MIN_LENGTH = 5 		# the minimal length of the lind id; adviced to leave a
 LIND_DB_FILE = 'Lind.db' 	# the name (and location) of the database file
 LIND_ID_RANGE = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789' #the characters that the lind id can consist of
 
-LIND_TABLE_KEYS = ['lind','url','expiration_time','limit_usage','access_password','admin_password'] #don't touch
+#don't touch
+LIND_TABLE_KEYS = ['lind','url','expiration_time','limit_usage','access_password','admin_password']
+cleanup_timestamp = time()
 
 def get_db():
 	if not (hasattr(g, 'db') and hasattr(g, 'cursor')):
@@ -24,6 +26,11 @@ def get_db():
 
 def close_db(e=None) -> None:
 	if hasattr(g, 'db') and hasattr(g, 'cursor'):
+		#cleanup database every twelve hours based on request trigger
+		global cleanup_timestamp
+		if time() > cleanup_timestamp:
+			database_maintenance()
+			cleanup_timestamp = cleanup_timestamp + (60 * 60 * 12)
 		g.cursor.close()
 		delattr(g, 'cursor')
 		g.db.commit()
@@ -61,28 +68,20 @@ def startup() -> None:
 	db.close()
 	return None
 
-def database_maintenance(full: bool=True) -> None:
-	"""Commit and optionally cleanup the database file
-
-	Args:
-		full (bool, optional): Cleanup the database on top of commiting. Defaults to True.
+def database_maintenance() -> None:
+	"""Cleanup the database tables
 
 	Returns:
 		None
 	"""
-	db = db_connect(LIND_DB_FILE)
-	cursor = db.cursor()
+	cursor = get_db()
 
-	if full == True:
-		database_cleaner = f"""
-			DELETE FROM rate_limiter WHERE expiration_time < {time() - 120};
-			DELETE FROM links WHERE expiration_time < {time()};
-		"""
-		cursor.executescript(database_cleaner)
+	database_cleaner = f"""
+		DELETE FROM rate_limiter WHERE expiration_time < {time() - 120};
+		DELETE FROM links WHERE expiration_time < {time()};
+	"""
+	cursor.executescript(database_cleaner)
 
-	cursor.close()
-	db.commit()
-	db.close()
 	return None
 
 def rate_limiter(ip: str) -> tuple:
@@ -149,7 +148,7 @@ def register_url(
 
 	#get current lind id length
 	cursor.execute("SELECT LENGTH(lind) FROM links ORDER BY lind DESC LIMIT 1;")
-	lind_id_length = (cursor.fetchone() or LIND_ID_MIN_LENGTH)[0]
+	lind_id_length = (cursor.fetchone() or LIND_ID_MIN_LENGTH)
 
 	#check if every possibility with this length hasn't been used yet
 	cursor.execute("SELECT COUNT(*) FROM links WHERE LENGTH(lind) = ?;", (str(lind_id_length),))

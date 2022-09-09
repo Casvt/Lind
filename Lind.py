@@ -64,8 +64,10 @@ def Lind():
 	server.run()
 	
 	#save after server stops
-	database_maintenance(full=True)
-	print('\nBye')
+	with app.app_context():
+		print('\nCleaning database')
+		database_maintenance()
+	print('Bye')
 
 if __name__ == "__main__":
 	Lind()
