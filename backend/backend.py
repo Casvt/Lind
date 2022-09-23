@@ -17,6 +17,8 @@ LIND_ID_RANGE = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 #don't touch
 LIND_TABLE_KEYS = ['lind','url','expiration_time','limit_usage','access_password','admin_password']
 cleanup_timestamp = time()
+not_allowed_ids = ('api', 'create')
+not_allowed_ids_lengths = {len(x): len([y for y in not_allowed_ids if len(y) == len(x)]) for x in not_allowed_ids}
 
 def get_db():
 	if not (hasattr(g, 'db') and hasattr(g, 'cursor')):
@@ -148,11 +150,11 @@ def register_url(
 
 	#get current lind id length
 	cursor.execute("SELECT LENGTH(lind) FROM links ORDER BY lind DESC LIMIT 1;")
-	lind_id_length = (cursor.fetchone() or LIND_ID_MIN_LENGTH)
+	lind_id_length = next(iter(cursor.fetchone() or []), LIND_ID_MIN_LENGTH)
 
 	#check if every possibility with this length hasn't been used yet
-	cursor.execute("SELECT COUNT(*) FROM links WHERE LENGTH(lind) = ?;", (str(lind_id_length),))
-	if len(LIND_ID_RANGE) ** lind_id_length == cursor.fetchone()[0]:
+	cursor.execute("SELECT COUNT(*) FROM links WHERE LENGTH(lind) = ?;", (lind_id_length,))
+	if len(LIND_ID_RANGE) ** lind_id_length - not_allowed_ids_lengths.get(lind_id_length, 0) == cursor.fetchone()[0]:
 		lind_id_length += 1
 
 	insert_keys = ['url']
@@ -198,7 +200,7 @@ def register_url(
 	insert_questions = ','.join(['?'] * len(insert_values))
 	while 1:
 		lind_id = ''.join(choice(LIND_ID_RANGE) for _ in range(lind_id_length))
-		if lind_id in ('api','create'): continue
+		if lind_id in not_allowed_ids: continue
 		try:
 			cursor.execute(
 				f"""
