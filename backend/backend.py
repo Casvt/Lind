@@ -149,8 +149,8 @@ def register_url(
 	cursor = get_db()
 
 	#get current lind id length
-	cursor.execute("SELECT LENGTH(lind) FROM links ORDER BY lind DESC LIMIT 1;")
-	lind_id_length = next(iter(cursor.fetchone() or []), LIND_ID_MIN_LENGTH)
+	cursor.execute("SELECT LENGTH(lind) FROM links ORDER BY rowid DESC LIMIT 1;")
+	lind_id_length = next(iter(cursor.fetchone() or (LIND_ID_MIN_LENGTH,)))
 
 	#check if every possibility with this length hasn't been used yet
 	cursor.execute("SELECT COUNT(*) FROM links WHERE LENGTH(lind) = ?;", (lind_id_length,))
