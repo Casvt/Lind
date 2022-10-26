@@ -11,17 +11,14 @@ This python written url shortener is simple but complete in it's features. It on
 - A rate limiter available for creating Linds
 - Easy to change how Lind behaves: you can change the minimum length or character range of the id's
 
-The home screen:
-![image](https://user-images.githubusercontent.com/88994465/181536708-7a04d22b-6a9e-41d9-ad54-7e3ae2c5f4c9.png)
-Simply enter the url to get a lind:
-![image](https://user-images.githubusercontent.com/88994465/181544937-c49d14e3-445e-4df5-8728-2618ca568ad1.png)
+The home screen where you can quickly make a simple Lind:
+![image](https://user-images.githubusercontent.com/88994465/198064343-b2b8e13f-79ea-4034-9f54-172027f9c730.png)
 Or use the advanced settings to add an expiration time, an usage limiter, password protect it or allow managing the Lind afterwards:
-![image](https://user-images.githubusercontent.com/88994465/181545554-031ecaa5-9dbe-4f40-95fb-1f20b9e095de.png)
+![image](https://user-images.githubusercontent.com/88994465/198064708-43e0a031-d9d8-4b7a-84c9-ff4d58578a7c.png)
 Click `create` and you'll get the Lind:
-![image](https://user-images.githubusercontent.com/88994465/180668116-971b066a-3fa7-41bc-8347-c7ff1aaec89d.png)
+![image](https://user-images.githubusercontent.com/88994465/198065108-4cfcec38-3efe-4295-b2ad-5643fabf117a.png)
 When accessing a password-protected Lind, you'll first need to enter the password set when created in order to continue:
-![image](https://user-images.githubusercontent.com/88994465/180668135-61d2f4c6-b8c4-451d-9907-544b4babf9c3.png)
+![image](https://user-images.githubusercontent.com/88994465/198065206-843dad20-0b13-4ce2-a868-886106e8776f.png)
 If an admin password is given when creating a Lind, you can go to `{lind}/manage` to manage the Lind
-![image](https://user-images.githubusercontent.com/88994465/181064259-ff23975b-a893-404c-9393-0fdcaffeb016.png)
-![image](https://user-images.githubusercontent.com/88994465/181543607-4705e288-3f6a-4f4f-8325-00ec43f61577.png)
-
+![image](https://user-images.githubusercontent.com/88994465/198065369-ff3486f0-e1d3-4fc3-9a5e-db1be1ac2cb5.png)
+![image](https://user-images.githubusercontent.com/88994465/198065422-fea77462-9b07-4ed9-aec5-bd9d5a4ba139.png)
