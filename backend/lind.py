@@ -27,6 +27,18 @@ not_allowed_ids_lengths = {
 }
 
 def _format_data(data: dict) -> dict:
+	"""Format and validate user submitted data of a Lind (for creation or update of Lind)
+
+	Args:
+		data (dict): Inputted data by user
+
+	Raises:
+		InvalidExpirationTime: The expiration time given is in the past or right now
+		InvalidLimitUsage: The usage limit given is below 1
+
+	Returns:
+		dict: Inputted data but formatted and validated
+	"""	
 	if data.get('expiration_time') is not None:
 		if isinstance(data.get('expiration_time'), str):
 			data['expiration_time'] = datetime.strptime(
@@ -58,10 +70,17 @@ def _format_data(data: dict) -> dict:
 	return data
 
 class AccessLind:
+	"""Represents a Lind that is accessed
+	"""
 	def __init__(self, lind_id: str):
 		self.lind_id = lind_id
 
 	def __iter__(self) -> iter:
+		"""Intended to be run as dict(instance). Returns underlying url of Lind.
+
+		Returns:
+			iter: Underlying url of the Lind
+		"""		
 		cursor = get_db(output_type='dict')
 		cursor.execute("SELECT url, limit_usage FROM linds WHERE lind_id = ?", (self.lind_id,))
 		result = cursor.fetchone()
@@ -75,10 +94,17 @@ class AccessLind:
 		return iter([('url', result['url'])])
 
 class ManageLind:
+	"""Represents a Lind that is managed
+	"""
 	def __init__(self, lind_id: str):
 		self.lind_id = lind_id
 
 	def __iter__(self) -> iter:
+		"""Intended to be run as dict(instance). Returns all info of Lind.
+
+		Returns:
+			iter: All info of the Lind
+		"""		
 		cursor = get_db(output_type='dict')
 		cursor.execute("SELECT url, expiration_time, limit_usage FROM linds WHERE lind_id = ?", (self.lind_id,))
 		result = dict(cursor.fetchone())
@@ -86,6 +112,18 @@ class ManageLind:
 		return iter(result.items())
 
 	def update(self, data: dict) -> dict:
+		"""Update (aka edit) the Lind
+
+		Args:
+			data (dict): User submitted data with keys and their new values
+
+		Raises:
+			InvalidExpirationTime: The expiration time given is in the past or right now
+			InvalidLimitUsage: The usage limit given is below 1
+
+		Returns:
+			dict: Updated info of the Lind
+		"""		
 		cursor = get_db(output_type='dict')
 		cursor.execute("SELECT url, expiration_time, limit_usage, access_password, admin_password FROM linds WHERE lind_id = ?", (self.lind_id,))
 		current_data = dict(cursor.fetchone())
@@ -101,11 +139,28 @@ class ManageLind:
 		return dict(self)
 
 	def delete(self) -> None:
+		"""Permanently delete the Lind
+		"""
 		cursor = get_db()
 		cursor.execute("DELETE FROM linds WHERE lind_id = ?", (self.lind_id,))
 		return
 
 def Lind(lind_id: str, access_password: str=None, admin_password: str=None):
+	"""Get a class representing the Lind based on password given. If access_password is given or no password, an AccessLind instance is returned. If admin_password is given, a ManageLind instance is returned.
+
+	Args:
+		lind_id (str): The id of the Lind to get an instance of
+		access_password (str, optional): The password to access it if set. Supply if intention is to access Lind. Defaults to None.
+		admin_password (str, optional): The password to manage. Supply if intention is to manage Lind. Defaults to None.
+
+	Raises:
+		LindNotFound: No lind with the given lind_id was found
+		AccessUnauthorized: The password given was incorrect
+		NotManageable: It is attempted to manage a Lind that doesn't have an admin_password setup
+
+	Returns:
+		AccessLind | ManageLind: An instance of a Lind class based on given password
+	"""	
 	cursor = get_db(output_type='dict')
 	cursor.execute("SELECT expiration_time, limit_usage, access_password, admin_password FROM linds WHERE lind_id = ?", (lind_id,))
 	result = cursor.fetchone()
@@ -145,6 +200,18 @@ def register_lind(
 	access_password: str = None,
 	admin_password: str = None,
 ) -> dict:
+	"""Create a Lind
+
+	Args:
+		url (str): The url that the Lind should redirect to
+		expiration_time (int, optional): Epoch after which the Lind will expire and will automatically be deleted. Defaults to None.
+		limit_usage (int, optional): How many times the Lind is allowed to be accessed and after the count it will automatically be deleted. Defaults to None.
+		access_password (str, optional): Restrict access to Lind with a password that needs to be entered. Defaults to None.
+		admin_password (str, optional): Password which, when set, allows you to manage the Lind after creation. Defaults to None.
+
+	Returns:
+		dict: Info of the created Lind including generated lind_id needed for accessing it
+	"""
 	cursor = get_db()
 
 	# get current lind_id length

@@ -55,10 +55,14 @@ def setup_db() -> None:
 	return
 
 class maintain_db:
+	"""Cleaning up the database
+	"""
 	def __init__(self):
 		self.time = time()
 
 	def maintain(self) -> None:
+		"""Clean the database
+		"""
 		cursor = db_connect(LIND_DB_FILE, timeout=20.0).cursor()
 
 		cursor.execute("DELETE FROM linds WHERE expiration_time < ?;", (time(),))
@@ -68,6 +72,8 @@ class maintain_db:
 		return
 
 	def check_maintenance(self) -> None:
+		"""Check if 12 hours have passed since the last time the database was cleaned and if so start clean in a thread.
+		"""		
 		if self.time < time():
 			self.time = time() + 43200
 			t = Thread(target=self.maintain)

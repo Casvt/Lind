@@ -16,9 +16,19 @@ PORT = "8080"
 THREADS = 10
 
 def _folder_path(*folders):
+	"""Receive absolute path of file or folder
+
+	Returns:
+		str: Absolute path of combination of *folders
+	"""	
 	return join(dirname(__file__), *folders)
 
 def create_app() -> Flask:
+	"""Create the app instance for the web server
+
+	Returns:
+		Flask: The app instance
+	"""
 	app = Flask(
 		__name__,
 		template_folder=_folder_path("frontend", "templates"),
@@ -56,6 +66,8 @@ def create_app() -> Flask:
 	return app
 
 def Lind() -> None:
+	"""Main function of Lind to run the software.
+	"""
 	# check python version
 	if (version_info.major < 3) or (version_info.major == 3 and version_info.minor < 7):
 		print(

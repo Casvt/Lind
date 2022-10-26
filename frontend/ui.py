@@ -46,7 +46,7 @@ def ui_show(lind_id: str):
 @ui.route("/<lind_id>/manage", methods=methods)
 def ui_manage(lind_id: str):
 	try:
-		lind = Lind(lind_id, admin_password="")
+		Lind(lind_id, admin_password="")
 
 	except LindNotFound:
 		return render_template("lind_not_found.html")
