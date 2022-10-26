@@ -4,9 +4,11 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Lind not found - Lind</title>
+	<title>Showoff - Lind</title>
 	
 	<link rel="stylesheet" href="/static/css/general.css">
+	<link rel="stylesheet" href="/static/css/show_lind.css">
+	<script src="/static/js/show_lind.js" defer></script>
 	
 </head>
 <body>
@@ -17,12 +19,15 @@
 			<a href="/manage">Manage</a>
 		</nav>
 		<header>
-			<h1>Lind</h1>
+			<h1 id="title"></h1>
 		</header>
 		<main>
-			<h2>The Lind was not found or has expired!</h2>
-			<p>Maybe create a new Lind?</p>
-			<a href="/create" class="create-link">Create Lind</a>
+			<h2>Your Lind is ready to be used!</h2>
+			<div class="action-bar">
+				<a href="" id="action-use" class="action">Use Lind</a>
+				<a href="/create" class="action">Create advanced Lind</a>
+				<a href="" id="action-manage" class="action">Manage Lind</a>
+			</div>
 		</main>
 	</div>
 </body>

@@ -1,0 +1,104 @@
+body {
+	overflow-y: hidden;
+	position: absolute;
+	inset: 0 0 0 0;
+	transition: top 1s ease-in-out;
+}
+
+body[show-edit] {
+	top: -100%;
+}
+
+main h2 {
+	font-size: clamp(1.2rem, 5vw, 1.5rem);
+}
+
+#login-form {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+#login-form > * {
+	font-size: clamp(1rem, 4vw, 1.2rem);
+	padding: .8rem;
+}
+
+#password-input {
+	border: 2px solid rgb(var(--color-gray-400));
+	border-radius: 4px;
+	background-color: rgb(var(--color-gray-500));
+}
+
+#password-input:focus {
+	outline: 3px solid rgb(var(--color-gray-300));
+}
+
+main p {
+	font-size: 1.1rem;
+}
+
+#edit-window {
+	display: flex;
+	flex-direction: column;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	padding: 1.5rem;
+}
+
+.manage-title {
+	color: rgb(var(--color-light));
+	width: 100%;
+	padding: 2rem;
+	background-image: linear-gradient(225deg, var(--color-gradient));
+	border-radius: 8px;
+	font-size: clamp(2rem, 5vw, 4rem);
+	margin-bottom: 1.5rem;
+}
+
+#edit-form {
+	width: 100%;
+	font-size: clamp(.8rem, 3vw, 1.3rem);
+}
+
+#edit-form > table {
+	margin: auto;
+}
+
+.edit-label,
+.edit-input {
+	padding-inline: clamp(.5rem, 2vw, 1rem);
+	padding-block: clamp(.2rem, 2vw, .5rem);
+	width: 50%;
+}
+
+.edit-label {
+	text-align: right;
+}
+
+.edit-input {
+	text-align: left;
+}
+
+.edit-input > * {
+	font-size: clamp(.8rem, 3vw, 1.3rem);
+	border: 0;
+	border-bottom: 1px solid rgb(var(--color-dark));
+	padding: clamp(.2rem, 2vw, .5rem);
+}
+
+.actions {
+	margin-top: 1rem;
+	display: flex;
+	gap: .5rem;
+	justify-content: center;
+}
+
+.actions > * {
+	font-size: 1rem;
+	width: 5rem;
+}

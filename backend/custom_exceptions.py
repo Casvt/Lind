@@ -1,32 +1,26 @@
 #-*- coding: utf-8 -*-
 
+class LindNotFound(Exception):
+	"""The Lind with the given id was not found
+	"""
+	api_response = {'error': 'LindNotFound', 'result': {}}, 404
+	
 class InvalidExpirationTime(Exception):
-	"""The expiration time given is now or in the past
+	"""The expiration time was in the past
 	"""
-	pass
-
+	api_response = {'error': 'InvalidExpirationTime', 'result': {}}, 400
+	
 class InvalidLimitUsage(Exception):
-	"""The value for the usage limiter is invalid (0 or lower)
+	"""The limit usage value was equal or below 0
 	"""
-	pass
-
-class LindIdNotFound(Exception):
-	"""A lind is requested but the id is not found in the database
-	"""
-	pass
+	api_response = {'error': 'InvalidLimitUsage', 'result': {}}, 400
 
 class AccessUnauthorized(Exception):
-	"""Unauthorized access to a lind with the intention to access it (password not given or invalid)
+	"""Access to the Lind was not allowed because the password to access it was not correct
 	"""
-	pass
-
-class ManageUnauthorized(Exception):
-	"""Unauthorized access to a lind with the intention to manage it (password not given or invalid)
-	"""
-	pass
-
+	api_response = {'error': 'AccessUnauthorized', 'result': {}}, 401
+	
 class NotManageable(Exception):
-	"""Lind is not manageble because no admin password was set
-	but an attempt was made to manage it
+	"""It's not possible to manage a Lind that doesn't have an admin_password setup
 	"""
-	pass
+	api_response = {'error': 'NotManageable', 'result': {}}, 400

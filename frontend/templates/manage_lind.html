@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Access Lind - Lind</title>
+	
+	<link rel="stylesheet" href="/static/css/general.css">
+	<link rel="stylesheet" href="/static/css/manage_lind.css">
+	<script src="/static/js/manage_lind.js" defer></script>
+	
+</head>
+<body>
+	<div id="main-screen">
+		<nav id="nav">
+			<a href="/use">Use Lind</a>
+			<a href="/create">Create</a>
+			<a href="/manage">Manage</a>
+		</nav>
+		<header>
+			<h1>Manage Lind</h1>
+		</header>
+		<main>
+			<h2>Enter password to manage this Lind.</h2>
+			<p class="error hidden" id="error-message"></p>
+			<form id="login-form">
+				<input type="password" id="password-input" placeholder="Password" autofocus autocomplete="current-password">
+				<button type="submit" class="create-button">Manage</button>
+			</form>
+			<p>Or create a new Lind</p>
+			<a href="/" class="create-link">Create Lind</a>
+		</main>
+	</div>
+	<section id="edit-window" aria-hidden="true">
+		<h2 class="manage-title">Manage your Lind</h2>
+		<form id="edit-form">
+			<table>
+				<tr>
+					<td class="edit-label">
+						<label for="url-input">URL</label>
+					</td>
+					<td class="edit-input">
+						<input type="url" id="url-input" required>
+					</td>
+				</tr>
+				<tr>
+					<td class="edit-label">
+						<label for="expiration-time-input">Expiration Time</label>
+						<p class="error hidden" id="expiration-error">*Expiration Time has to be in the future</p>
+					</td>
+					<td class="edit-input">
+						<input type="datetime-local" id="expiration-time-input">
+					</td>
+				</tr>
+				<tr>
+					<td class="edit-label">
+						<label for="limit-usage-input">Limit Usage</label>
+					</td>
+					<td class="edit-input">
+						<input type="number" id="limit-usage-input" min="1">
+					</td>
+				</tr>
+				<tr>
+					<td class="edit-label">
+						<label for="access-password-input">Access Password</label>
+					</td>
+					<td class="edit-input">
+						<input type="password" id="access-password-input" placeholder="Empty for current value. Set for new value." autocomplete="new-password">
+					</td>
+				</tr>
+				<tr>
+					<td class="edit-label">
+						<label for="admin-password-input">Admin Password</label>
+					</td>
+					<td class="edit-input">
+						<input type="password" id="admin-password-input" placeholder="Empty for current value. Set for new value." autocomplete="new-password">
+					</td>
+				</tr>
+			</table>
+			<div class="actions">
+				<button id="cancel-button" class="create-button" type="button">Cancel</button>
+				<button id="save-button" class="create-button" type="submit">Save</button>
+			</div>
+		</form>
+	</section>
+</body>
+</html>

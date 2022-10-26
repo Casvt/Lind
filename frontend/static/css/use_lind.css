@@ -1,0 +1,51 @@
+main {
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1rem;
+}
+
+main h2 {
+	font-size: clamp(1.2rem, 5vw, 1.5rem);
+}
+
+#go-form {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 1rem;
+	margin-bottom: 1rem;
+}
+
+#go-form > * {
+	font-size: clamp(1rem, 4vw, 1.2rem);
+	padding: .8rem;
+}
+
+#id-input {
+	border: 2px solid rgb(var(--color-gray-400));
+	border-radius: 4px;
+	background-color: rgb(var(--color-gray-500));
+}
+
+#id-input:focus {
+	outline: 3px solid rgb(var(--color-gray-300));
+}
+
+.go-button, .create-link {
+	border: 2px solid rgb(var(--color-gray-400));
+	border-radius: 4px;
+	background-image: linear-gradient(225deg, var(--color-gradient));
+	color: rgb(var(--color-light));
+}
+
+main p {
+	font-size: 1.1rem;
+}
+
+.create-link {
+	padding: .8rem;
+	text-decoration: none;
+}

@@ -4,11 +4,11 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Home - Lind</title>
+	<title>Use Lind - Lind</title>
 	
 	<link rel="stylesheet" href="/static/css/general.css">
-	<link rel="stylesheet" href="/static/css/index.css">
-	<script src="/static/js/index.js" defer></script>
+	<link rel="stylesheet" href="/static/css/use_lind.css">
+	<script src="/static/js/use_lind.js" defer></script>
 	
 </head>
 <body>
@@ -22,13 +22,14 @@
 			<h1>Lind</h1>
 		</header>
 		<main>
-			<h2>Create a Lind right now!</h2>
-			<form id="create-form">
-				<input type="url" id="url-input" placeholder="Your very long url..." autofocus>
-				<button type="submit" class="create-button">Create</button>
+			<h2>Enter the Lind ID and get going!</h2>
+			<p class="error hidden" id="error-message"></p>
+			<form id="go-form">
+				<input type="text" id="id-input" autofocus>
+				<button type="submit" class="go-button">Go</button>
 			</form>
-			<p>Or create an advanced Lind</p>
-			<a href="/create" class="create-link">Create advanced Lind</a>
+			<p>Or create your own Lind</p>
+			<a href="/" class="create-link">Create Lind</a>
 		</main>
 	</div>
 </body>
