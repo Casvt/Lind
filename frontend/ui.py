@@ -38,6 +38,8 @@ def ui_show(lind_id: str):
 	except LindNotFound:
 		return render_template('lind_not_found.html')
 
+	except AccessUnauthorized:
+		return render_template('show_lind.html')
 	else:
 		return render_template('show_lind.html')
 
